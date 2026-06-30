@@ -150,7 +150,7 @@ Then `onChange` is called with `false`
 **Step 3 — the mockup link written into `mockups/off.html`:**
 
 ```html
-<link rel="stylesheet" href="../../../../styles/tokens.css">
+<link rel="stylesheet" href="../../../styles/tokens.css">
 <button role="switch" aria-checked="false" class="toggle">
   <span class="thumb"></span>
 </button>
