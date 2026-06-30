@@ -1,0 +1,12 @@
+{
+  "name": "tomdavis",
+  "description": "Tom Davis' Claude Code plugins",
+  "owner": { "name": "Tom Davis" },
+  "plugins": [
+    {
+      "name": "ui-component-tdd",
+      "source": "./",
+      "description": "Design-first TDD workflow for UI components."
+    }
+  ]
+}
