@@ -27,7 +27,10 @@ Run these two commands inside Claude Code (in any repo or globally):
 
 ## 3. Per-repo config
 
-Each repo that uses the plugin must have a config file at `.claude/ui-component-tdd.json` in the repo root. All seven keys are required:
+Each repo that uses the plugin must have a config file at
+`.claude/ui-component-tdd.json` in the repo root. `componentsDir`,
+`tokensStylesheet`, `testCommand`, `typecheckCommand`, and `renderer` are
+always required. `renderer` selects which other keys are required.
 
 | Key | Purpose |
 |-----|---------|
@@ -35,11 +38,14 @@ Each repo that uses the plugin must have a config file at `.claude/ui-component-
 | `tokensStylesheet` | CSS file that exports design tokens (`var(--…)`), linked by mockups |
 | `testCommand` | Command that runs the component test suite |
 | `typecheckCommand` | Command that runs the TypeScript type-check |
-| `storybookCommand` | Command that starts Storybook |
-| `storybookUrl` | URL where Storybook is served (used to poll readiness) |
-| `storybookMcpUrl` | URL of the Storybook MCP endpoint (for structural fidelity checks) |
+| `renderer` | `"storybook"` or `"playwright"` — selects the Gate 2 mechanism |
+| `storybookCommand` *(storybook only)* | Command that starts Storybook |
+| `storybookUrl` *(storybook only)* | URL where Storybook is served (used to poll readiness) |
+| `storybookMcpUrl` *(storybook only)* | URL of the Storybook MCP endpoint (for structural fidelity checks) |
+| `harnessCommand` *(playwright only)* | Command that starts the app's dev server (serves the harness route) |
+| `harnessUrl` *(playwright only)* | URL where the harness route is served (used to poll readiness and to render states) |
 
-**Worked example** (generic npm-based React project):
+**Worked example — `renderer: "storybook"`** (generic npm-based React project):
 
 ```json
 {
@@ -47,13 +53,30 @@ Each repo that uses the plugin must have a config file at `.claude/ui-component-
   "tokensStylesheet": "src/styles/tokens.css",
   "testCommand": "npm test",
   "typecheckCommand": "npm run typecheck",
+  "renderer": "storybook",
   "storybookCommand": "npm run storybook",
   "storybookUrl": "http://localhost:6006",
   "storybookMcpUrl": "http://localhost:6006/mcp"
 }
 ```
 
-If this file is missing or any key is absent, every skill and the `/ui-tdd` command will stop immediately and ask you to create it before proceeding.
+**Worked example — `renderer: "playwright"`** (no Storybook dependency):
+
+```json
+{
+  "componentsDir": "src/components",
+  "tokensStylesheet": "src/styles/tokens.css",
+  "testCommand": "npm test",
+  "typecheckCommand": "npm run typecheck",
+  "renderer": "playwright",
+  "harnessCommand": "npm run dev",
+  "harnessUrl": "http://localhost:5173"
+}
+```
+
+If this file is missing, or any key required by your chosen `renderer` is
+absent, every skill and the `/ui-tdd` command will stop immediately and ask
+you to create it before proceeding.
 
 ---
 

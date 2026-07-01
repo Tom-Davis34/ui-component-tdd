@@ -33,11 +33,15 @@ else. If it is missing, STOP and ask the user to create it with this shape:
   "tokensStylesheet": "src/styles/tokens.css",
   "testCommand": "your-test-command",
   "typecheckCommand": "your-typecheck-command",
+  "renderer": "storybook",
   "storybookCommand": "your-storybook-command",
   "storybookUrl": "http://localhost:PORT",
   "storybookMcpUrl": "http://localhost:PORT/mcp"
 }
 ```
+
+If your repo uses `"renderer": "playwright"` instead, see README.md §3 for
+the equivalent shape (no Storybook keys, no MCP URL).
 
 Below, `<componentsDir>`, `<testCommand>`, etc. mean the corresponding values
 from that file.
