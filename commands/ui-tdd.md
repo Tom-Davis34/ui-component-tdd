@@ -51,7 +51,7 @@ the phases in order. The gates are hard stops — the human signs off at each.
    `<testCommand>` runs story play-tests in the Storybook browser project —
    keep it green.
 
-7. **GATE #2 — fidelity review.** Use the `/ui-component-tdd:comparing-mockups-to-storybook`
+7. **GATE #2 — fidelity review.** Use the `/ui-component-tdd:fidelity-storybook`
    skill. Start `<storybookCommand>`, dispatch the fidelity reviewer (structural via
    Storybook MCP + visual via Playwright), surface the per-state table, and STOP
    for the human's sign-off. Fix the component on mismatch. **Not done until

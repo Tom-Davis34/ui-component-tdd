@@ -1,5 +1,5 @@
 ---
-name: comparing-mockups-to-storybook
+name: fidelity-storybook
 description: Use when a component implementation passes its tests and you are about to call it done
 ---
 

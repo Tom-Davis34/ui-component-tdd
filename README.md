@@ -81,7 +81,7 @@ The seven phases run in strict order. Skipping is not allowed.
 | 4 | **GREEN** | Write minimal `<Component>.tsx`, `<Component>.module.css`, and `index.ts` re-export to pass. Run `testCommand` until green, then run `typecheckCommand`. |
 | 5 | **REFACTOR** | Clean up; stay green. |
 | 6 | **STORIES** | Write `<Component>.stories.tsx` with one story per state id. |
-| 7 | **GATE 2 — fidelity review** | `/ui-component-tdd:comparing-mockups-to-storybook` starts Storybook, dispatches a structural + visual comparison subagent, surfaces the per-state table, then **stops for your sign-off**. Not done until you sign off. |
+| 7 | **GATE 2 — fidelity review** | `/ui-component-tdd:fidelity-storybook` starts Storybook, dispatches a structural + visual comparison subagent, surfaces the per-state table, then **stops for your sign-off**. Not done until you sign off. |
 
 ### Per-component folder layout
 
@@ -109,7 +109,7 @@ src/components/
 | `/ui-component-tdd:writing-component-specs` | Define every visual state and user interaction with stable ids before implementing anything |
 | `/ui-component-tdd:writing-component-mockups` | Produce a self-contained static HTML design target for each state id |
 | `/ui-component-tdd:reviewing-component-design` | Gate 1: dispatch a design reviewer, surface the verdict, stop for human sign-off |
-| `/ui-component-tdd:comparing-mockups-to-storybook` | Gate 2: compare rendered Storybook stories against mockups (structure + visual), stop for human sign-off |
+| `/ui-component-tdd:fidelity-storybook` | Gate 2: compare rendered Storybook stories against mockups (structure + visual), stop for human sign-off |
 | `/ui-tdd <ComponentName>` | Drive the full seven-phase workflow for one component end-to-end |
 
 ---
