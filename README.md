@@ -6,7 +6,13 @@ A Claude Code plugin that enforces a **design-first TDD workflow** for React UI 
 
 ## 1. What it is
 
-`ui-component-tdd` adds four skills and one command to Claude Code. Together they structure the full component lifecycle into seven ordered phases with two mandatory human sign-off gates: **Gate 1** (design review — before any test or production code) and **Gate 2** (fidelity — before done). Skipping a gate or reordering the phases is explicitly rejected by the skills.
+`ui-component-tdd` adds six skills and one command to Claude Code — two of
+the skills are a renderer-specific pair (Storybook or Playwright) selected
+via config for the PREVIEW phase and Gate 2. Together they structure the
+full component lifecycle into seven ordered phases with two mandatory human
+sign-off gates: **Gate 1** (design review — before any test or production
+code) and **Gate 2** (fidelity — before done). Skipping a gate or reordering
+the phases is explicitly rejected by the skills.
 
 ---
 
@@ -85,8 +91,13 @@ you to create it before proceeding.
 The plugin does **not** install these — set them up in your repo before using the plugin:
 
 - **[Vitest](https://vitest.dev/) + [Testing Library](https://testing-library.com/)** — for the unit/interaction tests written in the RED phase.
-- **[Storybook](https://storybook.js.org/) with [`@storybook/addon-mcp`](https://www.npmjs.com/package/@storybook/addon-mcp)** — the addon exposes the MCP endpoint that the fidelity gate uses for structural checks.
-- **[Playwright](https://playwright.dev/)** — used by the fidelity reviewer for visual comparison of rendered stories against mockups.
+- **[Playwright](https://playwright.dev/)** — used by the fidelity reviewer for visual comparison against mockups on both renderers, and for structural checks too when `renderer: "playwright"`.
+
+**If `renderer: "storybook"`:**
+- **[Storybook](https://storybook.js.org/) with [`@storybook/addon-mcp`](https://www.npmjs.com/package/@storybook/addon-mcp)** — the addon exposes the MCP endpoint the fidelity gate uses for structural checks.
+
+**If `renderer: "playwright"`:**
+- **A harness route in your app** — a small dev-only route that renders one component state per URL, so the fidelity gate has a stable target the same way it would have a Storybook preview URL. `/ui-component-tdd:writing-component-playwright-harness` ships a reference template (Vite + react-router-dom) to copy in and adapt to your bundler/router.
 
 ---
 
@@ -103,8 +114,8 @@ The seven phases run in strict order. Skipping is not allowed.
 | 3 | **RED** | Write `<Component>.test.tsx` with at least one test per state id (`state:<id>`) and one per story id (`US-N:`). Run `testCommand` and confirm the new tests fail. |
 | 4 | **GREEN** | Write minimal `<Component>.tsx`, `<Component>.module.css`, and `index.ts` re-export to pass. Run `testCommand` until green, then run `typecheckCommand`. |
 | 5 | **REFACTOR** | Clean up; stay green. |
-| 6 | **STORIES** | Write `<Component>.stories.tsx` with one story per state id. |
-| 7 | **GATE 2 — fidelity review** | `/ui-component-tdd:fidelity-storybook` starts Storybook, dispatches a structural + visual comparison subagent, surfaces the per-state table, then **stops for your sign-off**. Not done until you sign off. |
+| 6 | **PREVIEW** | `renderer: "storybook"` — write `<Component>.stories.tsx`, one story per state id. `renderer: "playwright"` — write `<Component>.harness.tsx`, one entry per state id (via `/ui-component-tdd:writing-component-playwright-harness`). |
+| 7 | **GATE 2 — fidelity review** | `renderer: "storybook"` — `/ui-component-tdd:fidelity-storybook` starts Storybook, dispatches a structural (Storybook MCP) + visual (Playwright) comparison subagent. `renderer: "playwright"` — `/ui-component-tdd:fidelity-playwright` starts the harness route, dispatches a subagent using Playwright for both structural and visual comparison. Either way: surfaces the per-state table, then **stops for your sign-off**. Not done until you sign off. |
 
 ### Per-component folder layout
 
@@ -115,7 +126,8 @@ src/components/
     Button.test.tsx         # Tests (RED/GREEN)
     Button.tsx              # Implementation
     Button.module.css       # Styles
-    Button.stories.tsx      # Storybook stories (one per state)
+    Button.stories.tsx      # renderer: storybook -- one story per state
+    Button.harness.tsx      # renderer: playwright -- one fixture per state
     index.ts                # Re-export
     mockups/
       default.html          # One static HTML file per state id
@@ -132,7 +144,9 @@ src/components/
 | `/ui-component-tdd:writing-component-specs` | Define every visual state and user interaction with stable ids before implementing anything |
 | `/ui-component-tdd:writing-component-mockups` | Produce a self-contained static HTML design target for each state id |
 | `/ui-component-tdd:reviewing-component-design` | Gate 1: dispatch a design reviewer, surface the verdict, stop for human sign-off |
-| `/ui-component-tdd:fidelity-storybook` | Gate 2: compare rendered Storybook stories against mockups (structure + visual), stop for human sign-off |
+| `/ui-component-tdd:writing-component-playwright-harness` | `renderer: "playwright"` only — scaffold the harness route and write a component's fixture file |
+| `/ui-component-tdd:fidelity-storybook` | Gate 2 (`renderer: "storybook"`): compare rendered Storybook stories against mockups (structure + visual), stop for human sign-off |
+| `/ui-component-tdd:fidelity-playwright` | Gate 2 (`renderer: "playwright"`): compare the rendered harness route against mockups (structure + visual, both via Playwright), stop for human sign-off |
 | `/ui-tdd <ComponentName>` | Drive the full seven-phase workflow for one component end-to-end |
 
 ---

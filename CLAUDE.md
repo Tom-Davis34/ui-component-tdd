@@ -25,10 +25,12 @@ referring to values from the consumer repo's config file.
 commands/
   ui-tdd.md              # /ui-tdd command: orchestrates the 7-phase workflow end-to-end
 skills/
-  writing-component-specs/          # Phase 1a — spec-template.md
-  writing-component-mockups/        # Phase 1b — mockup-template.html
-  reviewing-component-design/       # Gate 1 — design-reviewer.md (subagent prompt)
-  comparing-mockups-to-storybook/   # Gate 2 — fidelity-reviewer.md (subagent prompt)
+  writing-component-specs/               # Phase 1a — spec-template.md
+  writing-component-mockups/             # Phase 1b — mockup-template.html
+  reviewing-component-design/            # Gate 1 — design-reviewer.md (subagent prompt)
+  writing-component-playwright-harness/  # Phase 6 (renderer: playwright) — harness-route-template.tsx, harness-fixture-template.tsx
+  fidelity-storybook/                    # Gate 2 (renderer: storybook) — fidelity-reviewer.md (subagent prompt)
+  fidelity-playwright/                   # Gate 2 (renderer: playwright) — fidelity-reviewer.md (subagent prompt)
 ```
 
 Each skill directory has a `SKILL.md` (the skill definition Claude Code loads) and, where
@@ -52,10 +54,15 @@ top-level orchestrator; it calls out to the four skills in order and refuses to 
 3. **RED → GREEN → REFACTOR** — standard TDD (delegates to `superpowers:test-driven-development`),
    except every state id and story id must map to a named test (`state:<id>`, `US-N:`).
 4. **STORIES** — one Storybook story per state id.
-5. **GATE 2 (fidelity review)** — `comparing-mockups-to-storybook` starts the consumer's Storybook,
-   dispatches a subagent using `fidelity-reviewer.md` (structural comparison via Storybook MCP
-   `preview-stories` + visual comparison via Playwright screenshots), surfaces a per-state
-   `structure | visual` table, then **stops for human sign-off**.
+5. **GATE 2 (fidelity review)** — depends on the `renderer` config key. `fidelity-storybook`
+   starts the consumer's Storybook, dispatches a subagent using `fidelity-reviewer.md`
+   (structural comparison via Storybook MCP `preview-stories` + visual comparison via
+   Playwright screenshots). `fidelity-playwright` starts the consumer's dev server instead,
+   and its subagent drives Playwright directly against a dev-only harness route
+   (`<harnessUrl>/__harness/<Component>/<state-id>`, scaffolded once per project by
+   `writing-component-playwright-harness`) for both structural and visual comparison — no
+   MCP endpoint needed. Either way, the subagent surfaces a per-state `structure | visual`
+   table, then **stops for human sign-off**.
 
 Key invariant threaded through every skill: **the subagent advises, the human decides.** A skill
 that treats a subagent's PASS/MATCH verdict as sufficient to proceed is violating the design —

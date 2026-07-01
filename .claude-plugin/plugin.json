@@ -4,5 +4,5 @@
   "author": { "name": "Tom Davis" },
   "repository": "https://github.com/Tom-Davis34/ui-component-tdd",
   "license": "MIT",
-  "keywords": ["skills", "tdd", "ui", "react", "storybook", "testing", "mockups"]
+  "keywords": ["skills", "tdd", "ui", "react", "storybook", "playwright", "testing", "mockups"]
 }
