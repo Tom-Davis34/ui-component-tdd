@@ -1,6 +1,6 @@
 {
   "name": "ui-component-tdd",
-  "description": "Design-first TDD workflow for UI components: per-state mockups + a Gherkin spec, a design-review gate before coding, and a mockup-vs-Storybook fidelity gate before done.",
+  "description": "Design-first TDD workflow for UI components: per-state mockups + a Gherkin spec, a design-review gate before coding, and a mockup-vs-render fidelity gate (Storybook or Playwright) before done.",
   "author": { "name": "Tom Davis" },
   "repository": "https://github.com/Tom-Davis34/ui-component-tdd",
   "license": "MIT",

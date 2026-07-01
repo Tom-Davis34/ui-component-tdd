@@ -97,7 +97,7 @@ The plugin does **not** install these — set them up in your repo before using 
 - **[Storybook](https://storybook.js.org/) with [`@storybook/addon-mcp`](https://www.npmjs.com/package/@storybook/addon-mcp)** — the addon exposes the MCP endpoint the fidelity gate uses for structural checks.
 
 **If `renderer: "playwright"`:**
-- **A harness route in your app** — a small dev-only route that renders one component state per URL, so the fidelity gate has a stable target the same way it would have a Storybook preview URL. `/ui-component-tdd:writing-component-playwright-harness` ships a reference template (Vite + react-router-dom) to copy in and adapt to your bundler/router.
+- **A harness route in your app** — a small dev-only route that renders one component state per URL, so the fidelity gate has a stable target the same way it would have a Storybook preview URL. `/ui-component-tdd:writing-component-playwright-harness` ships a reference template (Vite + react-router-dom) to copy in and adapt to your bundler/router. (You'll need a router configured in your app — the reference template uses react-router-dom.)
 
 ---
 
@@ -152,6 +152,8 @@ src/components/
 ---
 
 ## 7. Illustrative example
+
+This walkthrough assumes `renderer: "storybook"`; with `renderer: "playwright"`, phase 6 writes a `ToggleSwitch.harness.tsx` fixture instead of a stories file, and Gate 2 uses `fidelity-playwright`.
 
 Suppose you are building a `ToggleSwitch` component with two states: `on` and `off`.
 
