@@ -41,7 +41,7 @@ values before dispatching a subagent.
 
 The plugin enforces a **design-first TDD workflow** for React UI components in the *consumer*
 repo, split into 7 ordered phases with 2 hard human sign-off gates. `commands/ui-tdd.md` is the
-top-level orchestrator; it calls out to the four skills in order and refuses to skip phases:
+top-level orchestrator; it calls out to the six skills in order (branching on `renderer` for two of them) and refuses to skip phases:
 
 1. **AUTHOR** — `writing-component-specs` produces `<Component>.spec.md` (a States table with
    stable kebab-case ids + Gherkin `US-N` stories); `writing-component-mockups` produces one
@@ -53,7 +53,7 @@ top-level orchestrator; it calls out to the four skills in order and refuses to 
    sign-off**. No test or production code may exist before this gate passes.
 3. **RED → GREEN → REFACTOR** — standard TDD (delegates to `superpowers:test-driven-development`),
    except every state id and story id must map to a named test (`state:<id>`, `US-N:`).
-4. **STORIES** — one Storybook story per state id.
+4. **PREVIEW** — depends on the `renderer` config key. `renderer: "storybook"` writes one Storybook story per state id. `renderer: "playwright"` writes one `<Component>.harness.tsx` fixture entry per state id via `writing-component-playwright-harness` (see phase 5 below for the harness route it depends on).
 5. **GATE 2 (fidelity review)** — depends on the `renderer` config key. `fidelity-storybook`
    starts the consumer's Storybook, dispatches a subagent using `fidelity-reviewer.md`
    (structural comparison via Storybook MCP `preview-stories` + visual comparison via
@@ -72,9 +72,11 @@ SKILL.md's "Red flags" section.
 ## The consumer-repo config contract
 
 Every skill and the `/ui-tdd` command independently read `.claude/ui-component-tdd.json` from the
-*consumer* repo root as their first step, and hard-stop if it's missing. All seven keys are
-required and are referenced throughout the skill files as `<componentsDir>`, `<tokensStylesheet>`,
-`<testCommand>`, `<typecheckCommand>`, `<storybookCommand>`, `<storybookUrl>`, `<storybookMcpUrl>`
+*consumer* repo root as their first step, and hard-stop if it's missing. `componentsDir`,
+`tokensStylesheet`, `testCommand`, `typecheckCommand`, and `renderer` are always required;
+`renderer` (`"storybook"` or `"playwright"`) selects which further keys are required —
+`<storybookCommand>`, `<storybookUrl>`, `<storybookMcpUrl>` for storybook, or `<harnessCommand>`,
+`<harnessUrl>` for playwright
 (see README.md section 3 for the full shape). When editing skill files, preserve this
 config-read-first pattern — it's duplicated intentionally across every skill rather than factored
 out, since each skill can be invoked independently of the `/ui-tdd` orchestrator.
