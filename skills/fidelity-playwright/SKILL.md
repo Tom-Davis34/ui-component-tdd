@@ -81,4 +81,3 @@ NOT DONE UNTIL THIS GATE IS SIGNED OFF.
 - Editing a mockup to match the component to force a pass (without human
   ruling).
 - Treating the subagent's MATCH as the gate (the human signs off).
-```
