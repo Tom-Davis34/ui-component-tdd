@@ -51,15 +51,25 @@ the phases in order. The gates are hard stops — the human signs off at each.
 
 5. **REFACTOR.** Clean up; stay green.
 
-6. **STORIES.** Write `<Component>.stories.tsx` with one story per state id.
-   `<testCommand>` runs story play-tests in the Storybook browser project —
-   keep it green.
+6. **PREVIEW.** Depends on `<renderer>`:
+   - `storybook` — write `<Component>.stories.tsx` with one story per state
+     id. `<testCommand>` runs story play-tests in the Storybook browser
+     project — keep it green.
+   - `playwright` — using the
+     `/ui-component-tdd:writing-component-playwright-harness` skill,
+     scaffold the project-wide harness route if it doesn't exist yet, then
+     write `<Component>.harness.tsx` with one entry per state id.
 
-7. **GATE #2 — fidelity review.** Use the `/ui-component-tdd:fidelity-storybook`
-   skill. Start `<storybookCommand>`, dispatch the fidelity reviewer (structural via
-   Storybook MCP + visual via Playwright), surface the per-state table, and STOP
-   for the human's sign-off. Fix the component on mismatch. **Not done until
-   signed off.**
+7. **GATE #2 — fidelity review.** Depends on `<renderer>`:
+   - `storybook` — use the `/ui-component-tdd:fidelity-storybook` skill.
+     Start `<storybookCommand>`, dispatch the fidelity reviewer (structural
+     via Storybook MCP + visual via Playwright).
+   - `playwright` — use the `/ui-component-tdd:fidelity-playwright` skill.
+     Start `<harnessCommand>`, dispatch the fidelity reviewer (structural +
+     visual, both via Playwright against the harness route).
+
+   Either way: surface the per-state table, and STOP for the human's
+   sign-off. Fix the component on mismatch. **Not done until signed off.**
 
 ## Rules
 - Existing flat components: migrate into the folder only when running this on
